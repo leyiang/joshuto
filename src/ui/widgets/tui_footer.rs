@@ -130,7 +130,23 @@ impl<'a> Widget for TuiFooter<'a> {
 
                 Paragraph::new(Line::from(text)).render(area, buf);
             }
-            _ => {}
+            _ => {
+
+                let path = self.dirlist.file_path();
+                let mut text = vec![
+                    Span::styled(
+                        match self.tab_options.dirlist_options_ref(&path.to_path_buf()) {
+                            Some(opt) if !opt.filter_state_ref().is_none() => {
+                                format!("filter:{} ", opt.filter_state_ref())
+                            }
+                            _ => "".to_owned(),
+                        },
+                        indicator_style,
+                    )
+                ];
+
+                Paragraph::new(Line::from(text)).render(area, buf);
+            }
         }
     }
 }
